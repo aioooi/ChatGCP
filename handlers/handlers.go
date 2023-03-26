@@ -10,12 +10,15 @@ import (
 
 func GetShoutHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		// TODO get data
+		data, err := json.Marshal(entity.AllShouts())
+		if err != nil {
+			rw.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
 		rw.Header().Add("content-type", "application/json")
 		rw.WriteHeader(http.StatusFound)
-		rw.Write([]byte("Hello, World :)\n"))
-		// TODO rw.Write(data)
+		rw.Write(data)
 	}
 }
 
@@ -35,6 +38,12 @@ func PostShoutHandler() http.HandlerFunc {
 			return
 		}
 
-		// TODO write data
+		if shout.Author == "" || shout.Message == "" {
+			rw.WriteHeader(http.StatusExpectationFailed)
+			rw.Write([]byte("Empty author or message field"))
+			return
+		}
+		entity.PostShout(shout.Author, shout.Message)
+		rw.WriteHeader(http.StatusOK)
 	}
 }
