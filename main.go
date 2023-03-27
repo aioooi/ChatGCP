@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aioooi/goMicroservicesGCP/entity"
 	"github.com/aioooi/goMicroservicesGCP/handlers"
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	go entity.AwaitShouts()
+
 	router := mux.NewRouter()
 
 	router.Handle("/shouts", handlers.GetShoutHandler()).Methods("GET")

@@ -1,12 +1,13 @@
 package entity
 
 import (
+	"math"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-// A simple shout post
+// A simple shout post:
 type Shout struct {
 	Id        string `json:"id"`
 	Author    string `json:"author"`
@@ -16,16 +17,26 @@ type Shout struct {
 
 // The "database":
 var shouts []*Shout
+var shoutQueue = make(chan *Shout)
 
-func AllShouts() []*Shout {
-	return shouts
+const MAX_SHOUTS int = 20
+
+func AwaitShouts() {
+	for {
+		shouts = shouts[int(math.Max(float64(len(shouts)-MAX_SHOUTS), 0.0)):]
+		shouts = append(shouts, <-shoutQueue)
+	}
+}
+
+func AllShouts() *[]*Shout {
+	return &shouts
 }
 
 func PostShout(author, message string) {
-	shouts = append(shouts, &Shout{
+	shoutQueue <- &Shout{
 		Id:        uuid.New().String(),
 		Author:    author,
 		Message:   message,
-		Timestamp: time.Now().Format(time.RFC822),
-	})
+		Timestamp: time.Now().Format(time.RFC3339),
+	}
 }
