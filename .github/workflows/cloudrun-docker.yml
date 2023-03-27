@@ -52,11 +52,11 @@ on:
       - $default-branch
 
 env:
-  PROJECT_ID: go-microservices-gcp-example
-  GAR_LOCATION: europe-west1
-  REPOSITORY: release
-  SERVICE: go-microservices-gcp-example
-  REGION: europe-west1
+  PROJECT_ID: "go-microservices-gcp-example"
+  GAR_LOCATION: "europe-west1"
+  REPOSITORY: "release"
+  SERVICE: "go-microservices-gcp-example"
+  REGION: "europe-west1"
 
 jobs:
   deploy:
