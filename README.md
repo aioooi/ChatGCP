@@ -1,3 +1,4 @@
 # Go Microservices GCP
 
-An example service written in Golang, deployed to GCP.
+An example service written in Golang, deployed to GCP, using a simple GitHub
+Action.
