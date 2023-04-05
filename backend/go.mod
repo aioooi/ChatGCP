@@ -1,4 +1,4 @@
-module github.com/aioooi/goMicroservicesGCP
+module github.com/aioooi/goMicroservicesGCP/backend
 
 go 1.20
 

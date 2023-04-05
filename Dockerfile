@@ -4,7 +4,7 @@ FROM golang:latest as build-stage
 ENV CGO_ENABLED=0
 
 WORKDIR /app
-COPY . .
+COPY ./backend .
 RUN go build -o main .
 
 

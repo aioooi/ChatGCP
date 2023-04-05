@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/aioooi/goMicroservicesGCP/entity"
+	"github.com/aioooi/goMicroservicesGCP/backend/entity"
 )
 
 func GetShoutHandler() http.HandlerFunc {

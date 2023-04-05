@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aioooi/goMicroservicesGCP/entity"
-	"github.com/aioooi/goMicroservicesGCP/handlers"
+	"github.com/aioooi/goMicroservicesGCP/backend/entity"
+	"github.com/aioooi/goMicroservicesGCP/backend/handlers"
 	"github.com/gorilla/mux"
 )
 
