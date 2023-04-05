@@ -21,7 +21,7 @@ var shoutQueue = make(chan *Shout)
 
 const MAX_SHOUTS int = 20
 
-func AwaitShouts() {
+func PersistShoutsFromQueue() {
 	for {
 		shouts = shouts[int(math.Max(float64(len(shouts)-MAX_SHOUTS), 0.0)):]
 		shouts = append(shouts, <-shoutQueue)
@@ -32,7 +32,7 @@ func AllShouts() *[]*Shout {
 	return &shouts
 }
 
-func PostShout(author, message string) {
+func PutShoutToQueue(author, message string) {
 	shoutQueue <- &Shout{
 		Id:        uuid.New().String(),
 		Author:    author,

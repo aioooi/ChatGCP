@@ -43,7 +43,7 @@ func PostShoutHandler() http.HandlerFunc {
 			rw.Write([]byte("Empty author or message field"))
 			return
 		}
-		entity.PostShout(shout.Author, shout.Message)
+		entity.PutShoutToQueue(shout.Author, shout.Message)
 		rw.WriteHeader(http.StatusOK)
 	}
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	go entity.AwaitShouts()
+	go entity.PersistShoutsFromQueue()
 
 	router := mux.NewRouter()
 
