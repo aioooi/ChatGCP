@@ -18,10 +18,10 @@ func main() {
 	router.Handle("/shouts", handlers.PostShoutHandler()).Methods("POST")
 
 	server := http.Server{
-		Addr:    ":8080",
+		Addr:    ":80",
 		Handler: router,
 	}
 
-	fmt.Println("Server listening on port 8080.")
+	fmt.Println("Server listening on port 80.")
 	server.ListenAndServe()
 }
