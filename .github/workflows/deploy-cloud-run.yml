@@ -49,7 +49,7 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches:
-      - disable
+      - master
 
 env:
   PROJECT_ID: 'go-microservices-gcp-example'
