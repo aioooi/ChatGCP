@@ -46,10 +46,6 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Update Startup Script
-        #run: |
-        #  gcloud compute instances remove-metadata ${{ secrets.CE_INSTANCE }} \
-        #    --zone ${{ secrets.GCP_ZONE }} \
-        #    --keys=startup-script
         run: |
           gcloud compute instances add-metadata ${{ secrets.CE_INSTANCE }} \
             --zone ${{ secrets.GCP_ZONE }} \
