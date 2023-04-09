@@ -51,8 +51,8 @@ jobs:
         #    --zone ${{ secrets.GCP_ZONE }} \
         #    --keys=startup-script
         run: |
-          gcloud compute instances add-metadata ${{ secrets.CE_INSTANCE }}
-            --zone ${{ secrets.GCP_ZONE }}
+          gcloud compute instances add-metadata ${{ secrets.CE_INSTANCE }} \
+            --zone ${{ secrets.GCP_ZONE }} \
             --metadata-from-file=startup-script=./infrastructure/compute-engine-startup-script.sh
 
       - name: Deploy to Compute Engine
