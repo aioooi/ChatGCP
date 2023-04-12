@@ -37,44 +37,44 @@ func initHandler(s *melody.Session, name string) string {
 }
 
 // Sets up the melody handlers
-func Setup(m *melody.Melody) {
-	m.HandleConnect(func(s *melody.Session) {
+func Setup(mldy *melody.Melody) {
+	mldy.HandleConnect(func(s *melody.Session) {
 		k := initHandler(s, "handleConnect")
 		session[k] = ""
 		fmt.Println(session)
 	})
 
-	m.HandleDisconnect(func(s *melody.Session) {
+	mldy.HandleDisconnect(func(s *melody.Session) {
 		k := initHandler(s, "handleDisconnect")
 		delete(session, k)
 		fmt.Println(session)
 
-		m.Broadcast([]byte("{\"type\":" + EVENT_LOGOUT + "}"))
+		mldy.Broadcast([]byte("{\"type\":" + EVENT_LOGOUT + "}"))
 	})
 
-	m.HandleMessage(func(s *melody.Session, _msg []byte) {
+	mldy.HandleMessage(func(s *melody.Session, _msg []byte) {
 		k := initHandler(s, "handleMessage")
 
-		var msg Message
-		err := json.Unmarshal(_msg, &msg)
+		var m Message
+		err := json.Unmarshal(_msg, &m)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		switch msg.Type {
+		switch m.Type {
 		case ACTION_LOGIN:
 			// This is the only action so far, if more do another (outer, on
 			// PROTOCOL_ACTION, PROTOCOL_EVENT, PAYLOAD) switch/case and handle type
 			// of PROTOCOL_ACTION in inner switch/case, expecting action type such as
 			// ACTION_LOGIN as part of the payload.
-			session[k] = string(msg.Payload)
+			session[k] = string(m.Payload)
 			fmt.Println(session)
 
-			m.Broadcast([]byte("{\"type\":" + EVENT_LOGIN + "}"))
+			mldy.Broadcast([]byte("{\"type\":" + EVENT_LOGIN + "}"))
 
 		case PAYLOAD:
-			m.Broadcast(_msg)
+			mldy.Broadcast(_msg)
 		}
 	})
 }
