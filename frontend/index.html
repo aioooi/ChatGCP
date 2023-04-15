@@ -1,8 +1,105 @@
 <html>
   <head>
-    <title>Chat GCP</title>
+    <title>ChatGCP</title>
   </head>
+
+  <style>
+    #chat {
+      text-align: left;
+      background: #f1f1f1;
+      width: 500px;
+      min-height: 300px;
+      padding: 20px;
+    }
+  </style>
+
   <body>
-    <h1>Welcome to ChatGCP!</h1>
+    <center>
+      <h1>Welcome to ChatGCP</h1>
+      <div>
+        <h2>Login:</h2>
+        <div>User Name:</div>
+        <input id="user" type="text" />
+        <input id="login" type="button" value="Login" />
+      </div>
+
+      <pre id="chat"></pre>
+
+      <input placeholder="say something" id="text" type="text" />
+    </center>
+
+    <script>
+      // Message types:
+      const ACTION_LOGIN = "action-login";
+      const EVENT_USERS_UPDATED = "event-users-updated";
+      const PAYLOAD = "payload";
+
+      let url = "ws://" + window.location.host + "/ws";
+      let ws = new WebSocket(url);
+
+      function send(msg) {
+        console.log(`Sending '${msg}'`);
+        ws.send(msg);
+      }
+
+      // Use read-only (only set once by handleLogin):
+      let USERNAME = "";
+
+      function handleLogin() {
+        USERNAME = document.getElementById("user").value;
+        if (USERNAME != "") {
+          send(
+            JSON.stringify({
+              type: ACTION_LOGIN,
+              payload: { user: USERNAME },
+            })
+          );
+        }
+        // TODO hide login
+      }
+
+      document.getElementById("user").onkeydown = (e) => {
+        if (e.keyCode === 13) {
+          handleLogin();
+        }
+      };
+      document.getElementById("login").onclick = () => handleLogin();
+
+      ws.onmessage = (msg) => {
+        console.log(msg.data);
+        const m = JSON.parse(msg.data);
+        switch (m.type) {
+          case EVENT_USERS_UPDATED: {
+            // TODO fetch updated online users
+            break;
+          }
+          case PAYLOAD: {
+            // TODO add message payload to chat window
+            var line = now() + " " + msg.data + "\n";
+            chat.innerText += line;
+          }
+        }
+      };
+
+      // TODO
+      let chat = document.getElementById("chat");
+      let text = document.getElementById("text");
+
+      var now = function () {
+        var iso = new Date().toISOString();
+        return iso.split("T")[1].split(".")[0];
+      };
+      text.onkeydown = (e) => {
+        if (e.keyCode === 13 && text.value !== "") {
+          send(
+            JSON.stringify({
+              type: PAYLOAD,
+              payload: { user: USERNAME, message: text.value },
+            })
+          );
+          text.value = "";
+        }
+      };
+    </script>
   </body>
 </html>

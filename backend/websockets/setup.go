@@ -4,28 +4,34 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/olahol/melody"
 )
 
 type MessageType string
 
 const (
+	// Build hierarchy of type and action/event/... if necessary:
 	// PROTOCOL_ACTION MessageType = "action"
-	ACTION_LOGIN MessageType = "action-login"
 	// PROTOCOL_EVENT  MessageType = "event"
-	EVENT_LOGIN  MessageType = "event-login"
-	EVENT_LOGOUT MessageType = "event-logout"
-	PAYLOAD      MessageType = "payload"
+	// For now these suffice:
+	ACTION_LOGIN        MessageType = "action-login"
+	EVENT_USERS_UPDATED MessageType = "event-users-updated"
+	PAYLOAD             MessageType = "payload"
 )
 
 type Message struct {
-	Type    MessageType `json:"type"`
-	Payload []byte      `json:"payload"`
+	Type    MessageType       `json:"type"`
+	Payload map[string]string `json:"payload"`
 }
 
-// Maps "Sec-Webscocket-Key"s to user names of "logged in" users (or "" for
-// connected sessions with undefined user name (== not "logged in")).
-var session = make(map[string]string)
+type OnlineUser struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// Maps "Sec-Webscocket-Key"s to user names and IDs of "logged in" users
+var session = make(map[string]OnlineUser)
 
 // First step of every melody handler:
 // print some log line and return Sec-Websocket-Key
@@ -39,9 +45,7 @@ func initHandler(s *melody.Session, name string) string {
 // Sets up the melody handlers
 func Setup(mldy *melody.Melody) {
 	mldy.HandleConnect(func(s *melody.Session) {
-		k := initHandler(s, "handleConnect")
-		session[k] = ""
-		fmt.Println(session)
+		initHandler(s, "handleConnect")
 	})
 
 	mldy.HandleDisconnect(func(s *melody.Session) {
@@ -49,14 +53,15 @@ func Setup(mldy *melody.Melody) {
 		delete(session, k)
 		fmt.Println(session)
 
-		mldy.Broadcast([]byte("{\"type\":" + EVENT_LOGOUT + "}"))
+		mldy.Broadcast([]byte("{\"type\":\"" + EVENT_USERS_UPDATED + "\"}"))
 	})
 
-	mldy.HandleMessage(func(s *melody.Session, _msg []byte) {
+	mldy.HandleMessage(func(s *melody.Session, msg []byte) {
 		k := initHandler(s, "handleMessage")
+		fmt.Println(string(msg))
 
 		var m Message
-		err := json.Unmarshal(_msg, &m)
+		err := json.Unmarshal(msg, &m)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -68,13 +73,15 @@ func Setup(mldy *melody.Melody) {
 			// PROTOCOL_ACTION, PROTOCOL_EVENT, PAYLOAD) switch/case and handle type
 			// of PROTOCOL_ACTION in inner switch/case, expecting action type such as
 			// ACTION_LOGIN as part of the payload.
-			session[k] = string(m.Payload)
+			session[k] = OnlineUser{string(m.Payload["user"]), uuid.New().String()}
 			fmt.Println(session)
 
-			mldy.Broadcast([]byte("{\"type\":" + EVENT_LOGIN + "}"))
+			mldy.Broadcast([]byte("{\"type\":\"" + EVENT_USERS_UPDATED + "\"}"))
 
 		case PAYLOAD:
-			mldy.Broadcast(_msg)
+			// TODO maybe broadcast _to others_ to handle "own" messages without user
+			// IDs?
+			mldy.Broadcast(msg)
 		}
 	})
 }
