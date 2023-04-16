@@ -97,7 +97,9 @@ func Setup(mldy *melody.Melody) {
 				session[k] = OnlineUser{uuid.New().String(), string(m.Payload["user"])}
 				fmt.Println(session)
 
-				login_msg, err := json.Marshal(Message{EVENT_LOGIN, map[string]string{"id": session[k].Id}})
+				login_msg, err := json.Marshal(
+					Message{EVENT_LOGIN, map[string]string{"id": session[k].Id}},
+				)
 				if err != nil {
 					fmt.Println(err)
 				}
