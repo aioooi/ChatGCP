@@ -81,25 +81,31 @@
           }
           case EVENT_USERS_UPDATED: {
             ONLINE_USERS = m.payload;
-            console.log(`Online users updated:\n${ONLINE_USERS}`);
             break;
           }
           case PAYLOAD: {
             // TODO add message payload to chat window
-            var line = now() + " " + msg.data + "\n";
+            var line =
+              "[" +
+              now() +
+              "] " +
+              ONLINE_USERS[m.payload["user_id"]] +
+              ": " +
+              m.payload["message"] +
+              "\n";
             chat.innerText += line;
           }
         }
       };
 
-      // TODO
+      // TODO: maintain DOM map
       let chat = document.getElementById("chat");
       let text = document.getElementById("text");
 
-      var now = function () {
-        var iso = new Date().toISOString();
-        return iso.split("T")[1].split(".")[0];
-      };
+      function now() {
+        return new Date().toLocaleString().split(", ")[1];
+      }
+
       text.onkeydown = (e) => {
         if (e.keyCode === 13 && text.value !== "") {
           send(
