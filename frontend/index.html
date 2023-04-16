@@ -16,8 +16,8 @@
   <body>
     <center>
       <h1>Welcome to ChatGCP</h1>
-      <div>
-        <h2>Login:</h2>
+      <div id="login-form">
+        <h2>Please log in by choosing a user name:</h2>
         <div>User Name:</div>
         <input id="user" type="text" />
         <input id="login" type="button" value="Login" />
@@ -48,6 +48,8 @@
       let USER_NAME = "";
       let USER_ID = "";
 
+      let ONLINE_USERS = {};
+
       function handleLogin() {
         USER_NAME = document.getElementById("user").value;
         if (USER_NAME != "") {
@@ -75,9 +77,11 @@
           case EVENT_LOGIN: {
             USER_ID = m.payload["id"];
             console.log(`Logged in, ID=${USER_ID}`);
+            break;
           }
           case EVENT_USERS_UPDATED: {
-            // TODO fetch updated online users
+            ONLINE_USERS = m.payload;
+            console.log(`Online users updated:\n${ONLINE_USERS}`);
             break;
           }
           case PAYLOAD: {
@@ -101,7 +105,7 @@
           send(
             JSON.stringify({
               type: PAYLOAD,
-              payload: { user: USER_NAME, message: text.value },
+              payload: { user_id: USER_ID, message: text.value },
             })
           );
           text.value = "";

@@ -34,6 +34,21 @@ type OnlineUser struct {
 // Maps "Sec-Webscocket-Key"s to user names and IDs of "logged in" users
 var session = make(map[string]OnlineUser)
 
+// Extract OnlineUsers from Session
+func UsersUpdatedMessage() []byte {
+	users := make(map[string]string)
+	for _, v := range session {
+		users[v.Id] = v.Name
+	}
+
+	msg, err := json.Marshal(Message{EVENT_USERS_UPDATED, users})
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return msg
+}
+
 // First step of every melody handler:
 // print some log line and return Sec-Websocket-Key
 func initHandler(s *melody.Session, name string) string {
@@ -54,7 +69,8 @@ func Setup(mldy *melody.Melody) {
 		delete(session, k)
 		fmt.Println(session)
 
-		mldy.Broadcast([]byte("{\"type\":\"" + EVENT_USERS_UPDATED + "\"}"))
+		broadcast := UsersUpdatedMessage()
+		mldy.Broadcast(broadcast)
 	})
 
 	mldy.HandleMessage(func(s *melody.Session, msg []byte) {
@@ -74,22 +90,24 @@ func Setup(mldy *melody.Melody) {
 			// PROTOCOL_ACTION, PROTOCOL_EVENT, PAYLOAD) switch/case and handle type
 			// of PROTOCOL_ACTION in inner switch/case, expecting action type such as
 			// ACTION_LOGIN as part of the payload.
-			session[k] = OnlineUser{uuid.New().String(), string(m.Payload["user"])}
-			fmt.Println(session)
 
-			login_msg, err := json.Marshal(Message{EVENT_LOGIN, map[string]string{"id": session[k].Id}})
-			if err != nil {
-				fmt.Println(err)
+			// Do nothing if session[k] already has an OnlineUser:
+			_, logged_in := session[k]
+			if !logged_in {
+				session[k] = OnlineUser{uuid.New().String(), string(m.Payload["user"])}
+				fmt.Println(session)
+
+				login_msg, err := json.Marshal(Message{EVENT_LOGIN, map[string]string{"id": session[k].Id}})
+				if err != nil {
+					fmt.Println(err)
+				}
+				s.Write(login_msg)
+
+				broadcast := UsersUpdatedMessage()
+				mldy.Broadcast(broadcast)
 			}
-			s.Write([]byte(login_msg))
-
-			// TODO serialize OnlineUser
-
-			mldy.Broadcast([]byte("{\"type\":\"" + EVENT_USERS_UPDATED + "\"}"))
 
 		case PAYLOAD:
-			// TODO maybe broadcast _to others_ to handle "own" messages without user
-			// IDs?
 			mldy.Broadcast(msg)
 		}
 	})
