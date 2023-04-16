@@ -16,6 +16,7 @@ const (
 	// PROTOCOL_EVENT  MessageType = "event"
 	// For now these suffice:
 	ACTION_LOGIN        MessageType = "action-login"
+	EVENT_LOGIN         MessageType = "event-login"
 	EVENT_USERS_UPDATED MessageType = "event-users-updated"
 	PAYLOAD             MessageType = "payload"
 )
@@ -73,8 +74,16 @@ func Setup(mldy *melody.Melody) {
 			// PROTOCOL_ACTION, PROTOCOL_EVENT, PAYLOAD) switch/case and handle type
 			// of PROTOCOL_ACTION in inner switch/case, expecting action type such as
 			// ACTION_LOGIN as part of the payload.
-			session[k] = OnlineUser{string(m.Payload["user"]), uuid.New().String()}
+			session[k] = OnlineUser{uuid.New().String(), string(m.Payload["user"])}
 			fmt.Println(session)
+
+			login_msg, err := json.Marshal(Message{EVENT_LOGIN, map[string]string{"id": session[k].Id}})
+			if err != nil {
+				fmt.Println(err)
+			}
+			s.Write([]byte(login_msg))
+
+			// TODO serialize OnlineUser
 
 			mldy.Broadcast([]byte("{\"type\":\"" + EVENT_USERS_UPDATED + "\"}"))
 

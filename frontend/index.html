@@ -31,6 +31,7 @@
     <script>
       // Message types:
       const ACTION_LOGIN = "action-login";
+      const EVENT_LOGIN = "event-login";
       const EVENT_USERS_UPDATED = "event-users-updated";
       const PAYLOAD = "payload";
 
@@ -38,20 +39,22 @@
       let ws = new WebSocket(url);
 
       function send(msg) {
-        console.log(`Sending '${msg}'`);
+        console.log(`Sending\n'${msg}'`);
         ws.send(msg);
       }
 
+      // TODO turn into object and update comment
       // Use read-only (only set once by handleLogin):
-      let USERNAME = "";
+      let USER_NAME = "";
+      let USER_ID = "";
 
       function handleLogin() {
-        USERNAME = document.getElementById("user").value;
-        if (USERNAME != "") {
+        USER_NAME = document.getElementById("user").value;
+        if (USER_NAME != "") {
           send(
             JSON.stringify({
               type: ACTION_LOGIN,
-              payload: { user: USERNAME },
+              payload: { user: USER_NAME },
             })
           );
         }
@@ -69,6 +72,10 @@
         console.log(msg.data);
         const m = JSON.parse(msg.data);
         switch (m.type) {
+          case EVENT_LOGIN: {
+            USER_ID = m.payload["id"];
+            console.log(`Logged in, ID=${USER_ID}`);
+          }
           case EVENT_USERS_UPDATED: {
             // TODO fetch updated online users
             break;
@@ -94,7 +101,7 @@
           send(
             JSON.stringify({
               type: PAYLOAD,
-              payload: { user: USERNAME, message: text.value },
+              payload: { user: USER_NAME, message: text.value },
             })
           );
           text.value = "";
