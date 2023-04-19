@@ -7,20 +7,6 @@ body {
   color: white;
 }
 
-/* #container {
-  position: absolute;
-  top: 5vh;
-  left: 50%;
-  transform: translate(-50%, 0);
-
-
-  min-width: 1000px;
-  width: 60vw;
-
-  height: 95vh;
-  min-height: 600px;
-} */
-
 #container {
   position: absolute;
   top: 5vh;
@@ -120,12 +106,31 @@ input::placeholder {
 .message {
   width: 60%;
   background-color: #4e4e4e;
-  padding: 0.4em;
-  margin-top: 0.6em;
-  margin-bottom: 0.1em;
+  padding: 0.6eM;
+  margin-top: 0.6eM;
+  margin-bottom: 0.1eM;
   color: white;
   border-radius: 8px;
   filter: drop-shadow(-3px 3px 2px #00000019);
+}
+
+/*
+Make timestamp float to right bottom corner::after
+https://css-tricks.com/float-an-element-to-the-bottom-corner/#aa-markup-and-layout
+*/
+.message-wrapper {
+  display: flex;
+}
+
+.timestamp {
+  float: right;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  shape-outside: inset(calc(100% - 1.2eM) 0);
+  color: #bcbcbc;
+  font-size: 0.9eM;
+  margin-right: 0.3eM;
 }
 
 .message p {
@@ -147,19 +152,7 @@ input::placeholder {
 .author {
   font-size: 1em;
   font-weight: 600;
-  margin: 0.2em 0em 0.2em;
-}
-
-.timestamp {
-  position: relative;
-  width: fit-content;
-  height: fit-content;
-  padding: 0.1em;
-  margin-left: auto;
-  margin-right: 1%;
-  margin-top: -1em;
-  color: #bcbcbc;
-  font-size: 0.7em;
+  margin: 0.1eM 0em 0.2em;
 }
 
 .color-0 {
@@ -175,7 +168,7 @@ input::placeholder {
 }
 
 .color-3 {
-  color: rgb(148, 252, 158)
+  color: rgb(156, 250, 165)
 }
 
 .color-4 {
