@@ -1,8 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #2b2b2b;
-  background-image: linear-gradient(135deg, #2b2b2b 0%, #242222 100%);
+  background:
+    url('./assets/pattern.png'),
+    linear-gradient(135deg, #232323 0%, #2c2c2c 100%);    ;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: white;
 }
@@ -34,20 +35,20 @@ body {
   margin-left: auto;
   margin-right: -1px;
   padding: 0;
-  border-radius: 1em 0 0 1em;
+  border-radius: 0.75eM 0 0 0.75eM;
   filter: drop-shadow(-4px 4px 3px rgba(0, 0, 0, 0.175));
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid #ffffff08;
 }
 
 #users ul {
-  padding: 1em;
+  padding: 1eM;
   margin: 0;
 }
 
 #users li {
   list-style-type: none;
-  padding: 0.3em 0;
-  font-size: 1em;
+  padding: 0.3eM 0;
+  font-size: 1eM;
   font-weight: 600;
 }
 
@@ -58,16 +59,42 @@ body {
   height: 100%;
 }
 
-#message-container {
+#message-container-outer {
   position: relative;
   /* 100% - 2 * border-radius - drop-shadow.width : */
   width: calc(100% - 1.6eM - 6px);
   height: calc(100% - 8eM);
   background-color: #323232;
-  border-radius: 0.8eM;
-  padding: 0 0.7em;
-  overflow-y: auto;
+  border-radius: 1eM;
+  padding: 0;
+  overflow: hidden;
   filter: drop-shadow(-6px 6px 4px rgba(0, 0, 0, 0.175));
+}
+
+/* use inner container to clip scrollbar https://stackoverflow.com/a/22295604 */
+#message-container-inner {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 0.7eM;
+}
+
+#message-container-inner::-webkit-scrollbar {
+  width: 1eM;
+}
+
+/* Track */
+#message-container-inner::-webkit-scrollbar-track {
+  background: #00000000;
+}
+
+/* Handle */
+#message-container-inner::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+/* Handle on hover */
+#message-container-inner::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
 
 #chat {
@@ -85,9 +112,9 @@ body {
   width: 80%;
   background-color: #4e4e4e;
   border: 2px solid #ffffff11;
-  border-radius: 0.8em;
-  padding: 0.5em 1em;
-  font-size: 1.4em;
+  border-radius: 0.8eM;
+  padding: 0.5eM 1eM;
+  font-size: 1.2eM;
   color: white;
   outline: none;
   filter: drop-shadow(-6px 6px 4px rgba(0, 0, 0, 0.175));
@@ -110,7 +137,7 @@ input::placeholder {
   margin-top: 0.6eM;
   margin-bottom: 0.1eM;
   color: white;
-  border-radius: 8px;
+  border-radius: 0.5eM;
   filter: drop-shadow(-3px 3px 2px #00000019);
 }
 
@@ -134,55 +161,57 @@ https://css-tricks.com/float-an-element-to-the-bottom-corner/#aa-markup-and-layo
 }
 
 .message p {
-  font-size: 1.2em;
+  font-size: 1.2eM;
   margin: 0;
   padding: 0;
 }
 
 .own {
   margin-left: auto;
-  margin-right: 0em;
+  margin-right: 0;
 }
 
 .other {
-  margin-left: 0em;
+  margin-left: 0;
   margin-right: auto;
 }
 
 .author {
-  font-size: 1em;
+  font-size: 1eM;
   font-weight: 600;
-  margin: 0.1eM 0em 0.2em;
+  margin: 0.1eM 0 0.2eM;
 }
 
 .color-0 {
-  color: rgb(251, 214, 145)
+  color: #fbd691
 }
 
 .color-1 {
-  color: rgb(255, 254, 180)
+  color: #fffeb4
 }
 
 .color-2 {
-  color: rgb(193, 251, 157)
+  color: #c1fb9d
 }
 
 .color-3 {
-  color: rgb(156, 250, 165)
+  color: #9cfaa5
 }
 
 .color-4 {
-  color: rgb(187, 248, 255)
+  color: #bbf8ff
 }
 
 .color-5 {
-  color: rgb(163, 178, 254)
+  color: #a3b2fe
 }
 
 .color-6 {
-  color: rgb(214, 179, 255)
+  color: #d6b3ff
 }
 
 .color-7 {
-  color: rgb(255, 193, 213)
+  color: #ffc1d5
 }
+
+
