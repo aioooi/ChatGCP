@@ -16,12 +16,12 @@ func main() {
 
 	router := mux.NewRouter()
 
-	// Static files:
-	router.Handle("/", http.FileServer(http.Dir("./public")))
-
 	// API
 	router.Handle("/shouts", handlers.GetShoutHandler()).Methods("GET")
 	router.Handle("/shouts", handlers.PostShoutHandler()).Methods("POST")
+
+	// Static files:
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
 
 	// Websockets
 	mel := melody.New()
