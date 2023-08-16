@@ -3,7 +3,7 @@ body {
   padding: 0;
   background:
     url('./assets/pattern.png'),
-    linear-gradient(135deg, #232323 0%, #2c2c2c 100%);    ;
+    linear-gradient(135deg, #232323 0%, #2c2c2c 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: white;
 }

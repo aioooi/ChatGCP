@@ -1,19 +1,17 @@
 <script lang="ts">
 	import * as clientState from '$lib/ts/stores';
-	// import * as t from '$lib/ts/types';
-	// import type { ChatMessage } from '$lib/ts/types/main';
-
 	import Message from './Message.svelte';
 
-	const MESSAGE_TYPE = {
-		ACTION_LOGIN: 'action-login',
-		EVENT_LOGIN: 'event-login',
-		EVENT_USERS_UPDATED: 'event-users-updated',
-		PAYLOAD: 'payload'
-	};
+	enum MESSAGE_TYPE {
+		ACTION_LOGIN = 'action-login',
+		EVENT_LOGIN = 'event-login',
+		EVENT_USERS_UPDATED = 'event-users-updated',
+		PAYLOAD = 'payload'
+	}
 
 	// WebSocket connection to backend:
 	const BACKEND_HOST = import.meta.env.VITE_CHATGCP_BACKEND_HOST;
+	// TODO test for undefined here instead of 'undefined'?
 	if (BACKEND_HOST == 'undefined') {
 		// TODO redirect to error page
 	}
@@ -41,23 +39,23 @@
 				break;
 			}
 			case MESSAGE_TYPE.EVENT_USERS_UPDATED: {
-				ONLINE_USERS = m.payload;
+				handleUserUpdate(m.payload);
 				console.log(ONLINE_USERS);
 				break;
 			}
 			case MESSAGE_TYPE.PAYLOAD: {
-				messageBuffer = [...messageBuffer, m.payload];
+				messageBuffer = [
+					...messageBuffer,
+					{
+						...m.payload,
+						time: now(),
+						author:
+							m.payload['user_id'] == USER_ID
+								? t.ReceivedMessageAuthor.ThisUser
+								: t.ReceivedMessageAuthor.OtherUser
+					}
+				];
 				console.log(messageBuffer);
-				// TODO add message payload to chat window
-				// var line =
-				//   "[" +
-				//   now() +
-				//   "] " +
-				//   ONLINE_USERS[m.payload["user_id"]] +
-				//   ": " +
-				//   m.payload["message"] +
-				//   "\n";
-				// chat.innerText += line;
 			}
 		}
 	};
@@ -77,7 +75,29 @@
 
 	// Returns current timestamp as string
 	function now() {
-		return new Date().toLocaleString().split(', ')[1];
+		return String(new Date().toLocaleString().split(', ')[1]);
+	}
+
+	// Update ONLINE_USERS
+	function handleUserUpdate(updatedUsers: Object) {
+		// add new users
+		for (const [user_id, user_name] of Object.entries(updatedUsers)) {
+			if (!ONLINE_USERS.has(user_id)) {
+				ONLINE_USERS.set(user_id, {
+					id: user_id,
+					name: user_name,
+					color: nextColor()
+				});
+			}
+		}
+		// remove disconnected users
+		for (const [user_id, _] of ONLINE_USERS.entries()) {
+			if (!(user_id in updatedUsers)) {
+				ONLINE_USERS.delete(user_id);
+			}
+		}
+		// TODO put this in a store?
+		ONLINE_USERS = ONLINE_USERS;
 	}
 
 	function handleEnteredMessage(e) {
@@ -98,6 +118,13 @@
 		}
 	}
 
+	let COLORS = 8;
+	let color = COLORS - 1;
+	const nextColor = () => {
+		color += 1;
+		return color % COLORS;
+	};
+
 	// Client state
 	let user = '';
 	clientState.user.subscribe((v) => {
@@ -110,9 +137,9 @@
 
 	// TODO
 	let USER_ID = '';
-	let ONLINE_USERS = {};
+	let ONLINE_USERS = new Map<string, t.OnlineUser>();
 
-	let messageBuffer: any[] = [];
+	let messageBuffer: t.ReceivedMessage[] = [];
 </script>
 
 <h1>Running in {import.meta.env.VITE_CHATGCP_BACKEND_HOST}</h1>
@@ -121,9 +148,9 @@
 	<div id="users-container">
 		<div id="users">
 			<ul>
-				<!-- {#each ONLINE_USERS as u}
-					<li class={u.color}>{u.name}</li>
-				{/each} -->
+				{#each [...ONLINE_USERS.entries()] as [_, u]}
+					<li class={`color-${u.color}`}>{u.name}</li>
+				{/each}
 			</ul>
 		</div>
 	</div>

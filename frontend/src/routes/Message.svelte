@@ -1,10 +1,9 @@
 <script lang="ts">
-	// import Message from '$lib/ts/types/main'
-
-	export let msg = ''; //: Message;
+	export let msg: t.ReceivedMessage;
 </script>
 
 <div class="message-cls">
 	{msg.user_id}
+	{msg.time}
 	{msg.message}
 </div>
