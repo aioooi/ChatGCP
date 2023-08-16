@@ -15,18 +15,71 @@
 	};
 </script>
 
-<h1>HELLO</h1>
-<h2>MY NAME IS</h2>
-<form on:submit|preventDefault={handleSubmit}>
-	<label
-		>Username:
-		<input type="text" name="user" placeholder="<YOUR NAME>" autofocus />
-		<!-- <input type="button" value="Login" /> -->
-	</label>
-</form>
+<!--
+  SvelteKit doesn't render the body style from .default./style.css as
+  included in ./+layout.svelte without this one:
+-->
+<div style="height:1px" />
+
+<div id="sticker">
+	<h1>HELLO</h1>
+	<h2>MY NAME IS</h2>
+	<div id="field">
+		<form on:submit|preventDefault={handleSubmit}>
+			<input type="text" name="user" placeholder="<YOUR NAME>" autofocus />
+		</form>
+	</div>
+</div>
 
 <style>
+	#sticker {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) rotate(-2.3deg);
+		border-radius: 1.5em;
+		border: 3px solid red;
+		background-color: red;
+		padding: 1.5em 0.1em;
+	}
+
+	#field {
+		background-color: white;
+	}
+
+	input[type='text'] {
+		position: inherit;
+		width: 20ex;
+		padding: 0;
+		margin: 0;
+		border: none;
+		padding: 0.2em;
+		text-align: center;
+		height: 3.5em;
+		font-size: 4em;
+		color: black;
+		background: none;
+		transform: rotate(1.1deg);
+	}
+
+	input[type='text']:focus {
+		outline: none;
+	}
+
+	h1,
+	h2 {
+		text-align: center;
+		background-color: red;
+		color: white;
+		margin: 0;
+		padding: 0 0 0.3em;
+	}
+
 	h1 {
-		color: red;
+		font-size: 3em;
+	}
+
+	h2 {
+		font-size: 1.6em;
 	}
 </style>
