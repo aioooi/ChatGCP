@@ -2,6 +2,8 @@
 	import * as clientState from '$lib/ts/stores';
 	import Message from './Message.svelte';
 
+	import { ReceivedMessageAuthor } from '../types';
+
 	enum MESSAGE_TYPE {
 		ACTION_LOGIN = 'action-login',
 		EVENT_LOGIN = 'event-login',
@@ -44,15 +46,19 @@
 				break;
 			}
 			case MESSAGE_TYPE.PAYLOAD: {
+				const uid = m.payload['user_id'];
+				const user = ONLINE_USERS.get(uid);
 				messageBuffer = [
 					...messageBuffer,
 					{
-						...m.payload,
+						...m.payload, // provides user_id, message
 						time: now(),
-						author:
-							m.payload['user_id'] == USER_ID
-								? t.ReceivedMessageAuthor.ThisUser
-								: t.ReceivedMessageAuthor.OtherUser
+						authorType:
+							uid == USER_ID
+								? ReceivedMessageAuthor.ThisUser
+								: ReceivedMessageAuthor.OtherUser,
+						color: user?.color,
+						user_name: user?.name
 					}
 				];
 				console.log(messageBuffer);
@@ -63,7 +69,7 @@
 	// Connect client to server
 	function connect() {
 		console.log('Connecting to server...');
-		if (user != '') {
+		if (user != '' && USER_ID == '') {
 			sendMessage(
 				JSON.stringify({
 					type: MESSAGE_TYPE.ACTION_LOGIN,
@@ -79,7 +85,7 @@
 	}
 
 	// Update ONLINE_USERS
-	function handleUserUpdate(updatedUsers: Object) {
+	function handleUserUpdate(updatedUsers: object) {
 		// add new users
 		for (const [user_id, user_name] of Object.entries(updatedUsers)) {
 			if (!ONLINE_USERS.has(user_id)) {
@@ -137,9 +143,9 @@
 
 	// TODO
 	let USER_ID = '';
-	let ONLINE_USERS = new Map<string, t.OnlineUser>();
+	let ONLINE_USERS = new Map<string, OnlineUser>();
 
-	let messageBuffer: t.ReceivedMessage[] = [];
+	let messageBuffer: ReceivedMessage[] = [];
 </script>
 
 <h1>Running in {import.meta.env.VITE_CHATGCP_BACKEND_HOST}</h1>
