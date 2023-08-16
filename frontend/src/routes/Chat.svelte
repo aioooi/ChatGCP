@@ -106,21 +106,16 @@
 		ONLINE_USERS = ONLINE_USERS;
 	}
 
+	let messageValue: string;
 	function handleEnteredMessage(e) {
-		let data = new FormData(e.target);
-		console.log(data);
-
-		let m = data.get('message');
-		if (m != null) {
-			m = m.toString();
-			if (m != '') {
-				sendMessage(
-					JSON.stringify({
-						type: MESSAGE_TYPE.PAYLOAD,
-						payload: { user_id: USER_ID, message: m }
-					})
-				);
-			}
+		if (messageValue != '') {
+			sendMessage(
+				JSON.stringify({
+					type: MESSAGE_TYPE.PAYLOAD,
+					payload: { user_id: USER_ID, message: messageValue }
+				})
+			);
+			messageValue = '';
 		}
 	}
 
@@ -141,7 +136,7 @@
 		// module
 	});
 
-	// TODO
+	// TODO handles connection state
 	let USER_ID = '';
 	let ONLINE_USERS = new Map<string, OnlineUser>();
 
@@ -176,8 +171,8 @@
 			<form on:submit|preventDefault={handleEnteredMessage}>
 				<input
 					type="text"
-					name="message"
 					placeholder="Type a message and hit ENTER :)"
+					bind:value={messageValue}
 				/>
 				<!-- TODO button? -->
 			</form>
