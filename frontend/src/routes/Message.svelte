@@ -75,35 +75,35 @@
 		margin: 0.1em 0 0.2em;
 	}
 
-	.color-0 {
+	:global(.color-0) {
 		color: #fbd691;
 	}
 
-	.color-1 {
+	:global(.color-1) {
 		color: #fffeb4;
 	}
 
-	.color-2 {
+	:global(.color-2) {
 		color: #c1fb9d;
 	}
 
-	.color-3 {
+	:global(.color-3) {
 		color: #9cfaa5;
 	}
 
-	.color-4 {
+	:global(.color-4) {
 		color: #bbf8ff;
 	}
 
-	.color-5 {
+	:global(.color-5) {
 		color: #a3b2fe;
 	}
 
-	.color-6 {
+	:global(.color-6) {
 		color: #d6b3ff;
 	}
 
-	.color-7 {
+	:global(.color-7) {
 		color: #ffc1d5;
 	}
 </style>
