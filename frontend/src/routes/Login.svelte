@@ -25,7 +25,7 @@
 	<h1>HELLO</h1>
 	<h2>MY NAME IS</h2>
 	<div id="field">
-		<form on:submit|preventDefault={handleSubmit}>
+		<form on:submit|preventDefault={handleSubmit} autocomplete="off">
 			<input type="text" name="user" placeholder="<YOUR NAME>" autofocus />
 		</form>
 	</div>
@@ -36,11 +36,12 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%) rotate(-2.3deg);
+		transform: translate(-50%, -50%) translateZ(1px) rotate(-3deg);
 		border-radius: 1.5em;
 		border: 3px solid red;
 		background-color: red;
 		padding: 1.5em 0.1em;
+		filter: drop-shadow(-3px 3px 2px #000000ff);
 	}
 
 	#field {
