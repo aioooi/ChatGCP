@@ -2,6 +2,12 @@
 	import { ReceivedMessageAuthor } from '../types';
 
 	export let msg: ReceivedMessage;
+
+	// Extracts HH:MM from timestamp
+	function fmt_timestamp(timestamp: Date) {
+		//                            "HH:MM:SS".slice(0, 5)
+		return timestamp.toLocaleString().split(', ')[1].slice(0, 5);
+	}
 </script>
 
 <div
@@ -18,7 +24,7 @@
       https://css-tricks.com/float-an-element-to-the-bottom-corner/#aa-markup-and-layout
     -->
 		<div>
-			<span class="timestamp">{msg.time}</span>
+			<span class="timestamp">{fmt_timestamp(msg.timestamp)}</span>
 			{msg.message}
 		</div>
 	</div>

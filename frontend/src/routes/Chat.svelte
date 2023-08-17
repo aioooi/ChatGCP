@@ -52,7 +52,7 @@
 					...messageBuffer,
 					{
 						...m.payload, // provides user_id, message
-						time: now(),
+						timestamp: new Date(),
 						authorType:
 							uid == USER_ID
 								? ReceivedMessageAuthor.ThisUser
@@ -77,11 +77,6 @@
 				})
 			);
 		}
-	}
-
-	// Returns current timestamp as string
-	function now() {
-		return String(new Date().toLocaleString().split(', ')[1]);
 	}
 
 	// Update ONLINE_USERS

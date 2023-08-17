@@ -13,7 +13,7 @@ declare enum ReceivedMessageAuthor {
 interface ReceivedMessage {
 	user_id: string;
 	message: string;
-	time: string;
+	timestamp: Date;
 	// TODO not really clean to mix in the UI stuff
 	color: number;
 	user_name?: string;
