@@ -14,6 +14,7 @@
 	class="message"
 	class:own={msg.authorType == ReceivedMessageAuthor.ThisUser}
 	class:other={msg.authorType == ReceivedMessageAuthor.OtherUser}
+	class:system={msg.authorType == ReceivedMessageAuthor.System}
 >
 	{#if msg.authorType == ReceivedMessageAuthor.OtherUser}
 		<div class="author {`color-${msg.color}`}">{msg.user_name}</div>
@@ -25,6 +26,9 @@
     -->
 		<div>
 			<span class="timestamp">{fmt_timestamp(msg.timestamp)}</span>
+			{#if msg.authorType == ReceivedMessageAuthor.System}
+				<span class="author {`color-${msg.color}`}">{msg.user_name}</span>
+			{/if}
 			{msg.message}
 		</div>
 	</div>
@@ -72,6 +76,11 @@
 
 	.other {
 		margin-left: 0;
+		margin-right: auto;
+	}
+
+	.system {
+		margin-left: auto;
 		margin-right: auto;
 	}
 

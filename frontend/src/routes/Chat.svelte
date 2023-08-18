@@ -48,19 +48,16 @@
 			case MESSAGE_TYPE.PAYLOAD: {
 				const uid = m.payload['user_id'];
 				const user = ONLINE_USERS.get(uid);
-				messageBuffer = [
-					...messageBuffer,
-					{
-						...m.payload, // provides user_id, message
-						timestamp: new Date(),
-						authorType:
-							uid == USER_ID
-								? ReceivedMessageAuthor.ThisUser
-								: ReceivedMessageAuthor.OtherUser,
-						color: user?.color,
-						user_name: user?.name
-					}
-				];
+				appendMessageToBuffer({
+					...m.payload, // provides user_id, message
+					timestamp: new Date(),
+					authorType:
+						uid == USER_ID
+							? ReceivedMessageAuthor.ThisUser
+							: ReceivedMessageAuthor.OtherUser,
+					color: user?.color,
+					user_name: user?.name
+				});
 				console.log(messageBuffer);
 			}
 		}
@@ -84,17 +81,35 @@
 		// add new users
 		for (const [user_id, user_name] of Object.entries(updatedUsers)) {
 			if (!ONLINE_USERS.has(user_id)) {
-				ONLINE_USERS.set(user_id, {
+				const user = {
 					id: user_id,
 					name: user_name,
 					color: nextColor()
+				};
+				ONLINE_USERS.set(user_id, user);
+				appendMessageToBuffer({
+					user_id: user_id,
+					message: 'has joined the chat.',
+					timestamp: new Date(),
+					color: user.color,
+					user_name: user_name,
+					authorType: ReceivedMessageAuthor.System
 				});
 			}
 		}
 		// remove disconnected users
 		for (const [user_id, _] of ONLINE_USERS.entries()) {
 			if (!(user_id in updatedUsers)) {
+				const user = ONLINE_USERS.get(user_id);
 				ONLINE_USERS.delete(user_id);
+				appendMessageToBuffer({
+					user_id: user_id,
+					message: 'has left the chat.',
+					timestamp: new Date(),
+					color: user.color,
+					user_name: user.name,
+					authorType: ReceivedMessageAuthor.System
+				});
 			}
 		}
 		// TODO put this in a store?
@@ -136,6 +151,10 @@
 	let ONLINE_USERS = new Map<string, OnlineUser>();
 
 	let messageBuffer: ReceivedMessage[] = [];
+	function appendMessageToBuffer(msg: ReceivedMessage) {
+		// Svelte is reactive on assignments
+		messageBuffer = [...messageBuffer, msg];
+	}
 </script>
 
 <h1>Running in {import.meta.env.VITE_CHATGCP_BACKEND_HOST}</h1>
