@@ -1,4 +1,4 @@
-# Go Microservices GCP
+# ChatGCP
 
-An example service written in Golang, deployed to GCP.
+A chat app built with SvelteKit, using a Go backend.
 
