@@ -27,7 +27,7 @@
 		<div>
 			<span class="timestamp">{fmt_timestamp(msg.timestamp)}</span>
 			{#if msg.authorType == ReceivedMessageAuthor.System}
-				<span class="author {`color-${msg.color}`}">{msg.user_name}</span>
+				<span class="author {`user-color-${msg.color}`}">{msg.user_name}</span>
 			{/if}
 			{msg.message}
 		</div>
@@ -88,37 +88,5 @@
 		font-size: 1em;
 		font-weight: 600;
 		margin: 0.1em 0 0.2em;
-	}
-
-	:global(.color-0) {
-		color: #fbd691;
-	}
-
-	:global(.color-1) {
-		color: #fffeb4;
-	}
-
-	:global(.color-2) {
-		color: #c1fb9d;
-	}
-
-	:global(.color-3) {
-		color: #9cfaa5;
-	}
-
-	:global(.color-4) {
-		color: #bbf8ff;
-	}
-
-	:global(.color-5) {
-		color: #a3b2fe;
-	}
-
-	:global(.color-6) {
-		color: #d6b3ff;
-	}
-
-	:global(.color-7) {
-		color: #ffc1d5;
 	}
 </style>

@@ -127,3 +127,35 @@ body {
 input::placeholder {
 	color: #a8a8a8;
 }
+
+.user-color-0 {
+  color: #fbd691;
+}
+
+.user-color-1 {
+  color: #fffeb4;
+}
+
+.user-color-2 {
+  color: #c1fb9d;
+}
+
+.user-color-3 {
+  color: #9cfaa5;
+}
+
+.user-color-4 {
+  color: #bbf8ff;
+}
+
+.user-color-5 {
+  color: #a3b2fe;
+}
+
+.user-color-6 {
+  color: #d6b3ff;
+}
+
+.user-color-7 {
+  color: #ffc1d5;
+}

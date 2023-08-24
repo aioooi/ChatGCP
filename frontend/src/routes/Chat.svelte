@@ -164,7 +164,7 @@
 		<div id="users">
 			<ul>
 				{#each [...ONLINE_USERS.entries()] as [_, u]}
-					<li class={`color-${u.color}`}>{u.name}</li>
+					<li class={`user-color-${u.color}`}>{u.name}</li>
 				{/each}
 			</ul>
 		</div>
