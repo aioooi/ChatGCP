@@ -18,11 +18,12 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        working-directory: '/frontend'
         run: npm install
 
       - name: build
-        env:
-          BASE_PATH: '/frontend'
+        # env:
+        #   BASE_PATH: '/ChatGCP'
         run: |
           npm run build
           touch build/.nojekyll
