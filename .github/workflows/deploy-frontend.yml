@@ -1,0 +1,57 @@
+name: Build Frontend and Test Deployment to GitHub Pages
+
+on:
+  push:
+    branches: '**'
+
+jobs:
+  build_site:
+    runs-on: ubuntu-latest
+    # env:
+    #   working-directory: ./frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: 'frontend'
+        run: npm install
+
+      - name: build
+        working-directory: 'frontend'
+        # env:
+        #   BASE_PATH: '/ChatGCP'
+        run: |
+          npm run build
+          touch build/.nojekyll
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # this should match the `pages` option in your adapter-static options
+          path: 'frontend/build/'
+
+  deploy:
+    needs: build_site
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1

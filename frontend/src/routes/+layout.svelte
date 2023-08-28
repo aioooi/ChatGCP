@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Cf. https://github.com/sveltejs/kit/issues/714
-	import '../style.css';
+	import '$lib/assets/style.css';
 </script>
 
 <slot />
